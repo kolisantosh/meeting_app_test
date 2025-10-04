@@ -1,0 +1,569 @@
+{
+    "StatusCode": 200,
+    "Status": "Success",
+    "Message": null,
+    "Data": {
+        "list": [
+            {
+                "DLEventID": 100132,
+                "EventSubject": "CIS",
+                "MeetingType": "InBound",
+                "EventDesc": null,
+                "EventType": 317,
+                "EventFromDate": "2025-10-04T10:00:01",
+                "EventToDate": "2025-10-04T10:55:00",
+                "EventAllDays": false,
+                "EventStatusID": 2,
+                "EventEntDt": "2025-09-22T10:01:06.79",
+                "EventUpdDt": "2025-09-22T11:57:51.687",
+                "MeetingTypeID": 5,
+                "EventOwnerInTime": null,
+                "EventIsBroadcast": false,
+                "DeviceDetail": "1E006D20-9359-5342-AB6D-B92CF4049A14",
+                "OnResourceBeforeMinutes": 15,
+                "LocationID": 2,
+                "EventLocationID": 1,
+                "EventLocation": "Aether",
+                "EventMainStatusID": 174,
+                "CreatedByUserID": 7,
+                "CreatedByUserName": "Naresh Nagar",
+                "CreatedForUserID": 7,
+                "MeetingTypeName": "Internal Meeting",
+                "CreatedForUserName": "Naresh Nagar",
+                "StatusDesc": "Completed",
+                "DLCategoryID": 3,
+                "LocationName": "Sachin GIDC - 8203",
+                "CreatedforEmpid": 77,
+                "IsExternalInvitee": false,
+                "DLEventParticipents": [
+                    {
+                        "ParticipentLogID": 173545,
+                        "PersonID": 5,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1025_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100132,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Dipak Rathod",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Chief Information Officer",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "1025",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Dipak Rathod",
+                                "DoorName": "Fire",
+                                "PersonID": 5,
+                                "CardNo": "1025",
+                                "Datetimes": null
+                            }
+                        ]
+                    }
+                ],
+                "DLEventMatrixDoorDet": [
+                    {
+                        "EvtdirectDID": 71178,
+                        "DLEventID": 100132,
+                        "DoorID": "d_516",
+                        "DoorName": "Fire",
+                        "Entdt": "2025-10-04T10:55:29.083",
+                        "DoorGroupID": null,
+                        "DoorType": null,
+                        "EntUser": "Naresh Nagar",
+                        "EntTerm": "172.25.1.161",
+                        "DoorLink": true,
+                        "IsSharedWorkSpace": null
+                    }
+                ],
+                "DLEventFollowersDet": []
+            },
+            {
+                "DLEventID": 100213,
+                "EventSubject": "Verification of HR letters ",
+                "MeetingType": "InBound",
+                "EventDesc": "",
+                "EventType": 317,
+                "EventFromDate": "2025-10-04T11:00:01",
+                "EventToDate": "2025-10-04T14:00:00",
+                "EventAllDays": false,
+                "EventStatusID": 2,
+                "EventEntDt": "2025-09-21T10:43:47.807",
+                "EventUpdDt": "2025-09-22T02:03:19.29",
+                "MeetingTypeID": 1,
+                "EventOwnerInTime": "2025-10-04T11:33:57",
+                "EventIsBroadcast": false,
+                "DeviceDetail": "6C43E98B-8D93-58E9-9D4A-D740719A585B",
+                "OnResourceBeforeMinutes": 15,
+                "LocationID": 2,
+                "EventLocationID": 1,
+                "EventLocation": "Aether",
+                "EventMainStatusID": 174,
+                "CreatedByUserID": 714,
+                "CreatedByUserName": "Harsh Vora",
+                "CreatedForUserID": 714,
+                "MeetingTypeName": "Meeting",
+                "CreatedForUserName": "Harsh Vora",
+                "StatusDesc": "Completed",
+                "DLCategoryID": 3,
+                "LocationName": "Sachin GIDC - 8203",
+                "CreatedforEmpid": 1260,
+                "IsExternalInvitee": false,
+                "DLEventParticipents": [
+                    {
+                        "ParticipentLogID": 173691,
+                        "PersonID": 752095,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/3104_Personal.jpeg",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100213,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Siddharth Prajapati",
+                        "PersonDepartment": "HR & IR Team",
+                        "PersonDesignation": "Assistant HR",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "3104",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Siddharth Prajapati",
+                                "DoorName": "Fire",
+                                "PersonID": 752095,
+                                "CardNo": "3104",
+                                "Datetimes": null
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173692,
+                        "PersonID": 725830,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1797_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100213,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Sanjay Dantreliya",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Sr. Software Developer & DBA",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "1797",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Sanjay Dantreliya",
+                                "DoorName": "Fire",
+                                "PersonID": 725830,
+                                "CardNo": "1797",
+                                "Datetimes": "2025-10-04T11:39:24"
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173693,
+                        "PersonID": 747145,
+                        "IsAttending": "Y",
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/2641_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100213,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Ajay Mali",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Software Developer",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "2641",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Ajay Mali",
+                                "DoorName": "Fire",
+                                "PersonID": 747145,
+                                "CardNo": "2641",
+                                "Datetimes": "2025-10-04T11:07:01"
+                            }
+                        ]
+                    }
+                ],
+                "DLEventMatrixDoorDet": [
+                    {
+                        "EvtdirectDID": 71209,
+                        "DLEventID": 100213,
+                        "DoorID": "d_516",
+                        "DoorName": "Fire",
+                        "Entdt": "2025-10-04T10:43:47.807",
+                        "DoorGroupID": null,
+                        "DoorType": null,
+                        "EntUser": "Harsh Vora",
+                        "EntTerm": "172.25.1.161",
+                        "DoorLink": true,
+                        "IsSharedWorkSpace": null
+                    }
+                ],
+                "DLEventFollowersDet": [
+                    {
+                        "FollowersID": 8603,
+                        "DLEventID": 100213,
+                        "PersonID": 5,
+                        "IsPersonActive": true,
+                        "PersonName": "Dipak Rathod",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Chief Information Officer",
+                        "PersonCompany": "Aether Industries Limited",
+                        "IsEmployee": true,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1025_Personal.jpg"
+                    },
+                    {
+                        "FollowersID": 8604,
+                        "DLEventID": 100213,
+                        "PersonID": 46,
+                        "IsPersonActive": true,
+                        "PersonName": "Denish Dodhiyawala",
+                        "PersonDepartment": "HR & IR Team",
+                        "PersonDesignation": "Lead HR & IR",
+                        "PersonCompany": "Aether Industries Limited",
+                        "IsEmployee": true,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1073_Personal.jpg"
+                    }
+                ]
+            },
+            {
+                "DLEventID": 100246,
+                "EventSubject": "CIS",
+                "MeetingType": "InBound",
+                "EventDesc": null,
+                "EventType": 317,
+                "EventFromDate": "2025-10-04T14:46:01",
+                "EventToDate": "2025-10-04T17:00:59",
+                "EventAllDays": false,
+                "EventStatusID": 2,
+                "EventEntDt": "2025-09-20T14:46:21.58",
+                "EventUpdDt": "2025-09-20T16:03:22.007",
+                "MeetingTypeID": 5,
+                "EventOwnerInTime": null,
+                "EventIsBroadcast": null,
+                "DeviceDetail": null,
+                "OnResourceBeforeMinutes": 15,
+                "LocationID": 2,
+                "EventLocationID": 1,
+                "EventLocation": "Aether",
+                "EventMainStatusID": 174,
+                "CreatedByUserID": 2028,
+                "CreatedByUserName": "Jafar Bhathiyara",
+                "CreatedForUserID": 2028,
+                "MeetingTypeName": "Internal Meeting",
+                "CreatedForUserName": "Jafar Bhathiyara",
+                "StatusDesc": "Completed",
+                "DLCategoryID": 3,
+                "LocationName": "Sachin GIDC - 8203",
+                "CreatedforEmpid": 2051,
+                "IsExternalInvitee": null,
+                "DLEventParticipents": [
+                    {
+                        "ParticipentLogID": 173755,
+                        "PersonID": 5,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1025_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": null,
+                        "DLEventID": 100246,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Dipak Rathod",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Chief Information Officer",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "1025",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Dipak Rathod",
+                                "DoorName": "Fire",
+                                "PersonID": 5,
+                                "CardNo": "1025",
+                                "Datetimes": null
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173756,
+                        "PersonID": 725830,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/1797_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": true,
+                        "DLEventID": 100246,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Sanjay Dantreliya",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Sr. Software Developer & DBA",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "1797",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Sanjay Dantreliya",
+                                "DoorName": "Fire",
+                                "PersonID": 725830,
+                                "CardNo": "1797",
+                                "Datetimes": "2025-10-04T14:56:16"
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173757,
+                        "PersonID": 735955,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/2158_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": true,
+                        "DLEventID": 100246,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Harsh Vora",
+                        "PersonDepartment": "HR & IR Team",
+                        "PersonDesignation": "Sr. Executive - HR",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "2158",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Harsh Vora",
+                                "DoorName": "Fire",
+                                "PersonID": 735955,
+                                "CardNo": "2158",
+                                "Datetimes": "2025-10-04T14:54:31"
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173758,
+                        "PersonID": 747145,
+                        "IsAttending": null,
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/2641_Personal.jpg",
+                        "ShowAs": 1,
+                        "IsCoHost": true,
+                        "DLEventID": 100246,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Ajay Mali",
+                        "PersonDepartment": "CIS Team",
+                        "PersonDesignation": "Software Developer",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "2641",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Ajay Mali",
+                                "DoorName": "Fire",
+                                "PersonID": 747145,
+                                "CardNo": "2641",
+                                "Datetimes": null
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173775,
+                        "PersonID": 752095,
+                        "IsAttending": "Y",
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/3104_Personal.jpeg",
+                        "ShowAs": null,
+                        "IsCoHost": null,
+                        "DLEventID": 100246,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Siddharth Prajapati",
+                        "PersonDepartment": "HR & IR Team",
+                        "PersonDesignation": "Assistant HR",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "3104",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Siddharth Prajapati",
+                                "DoorName": "Fire",
+                                "PersonID": 752095,
+                                "CardNo": "3104",
+                                "Datetimes": "2025-10-04T16:55:24"
+                            }
+                        ]
+                    }
+                ],
+                "DLEventMatrixDoorDet": [
+                    {
+                        "EvtdirectDID": 71230,
+                        "DLEventID": 100246,
+                        "DoorID": "d_516",
+                        "DoorName": "Fire",
+                        "Entdt": "2025-10-04T14:46:21.58",
+                        "DoorGroupID": null,
+                        "DoorType": null,
+                        "EntUser": "Jafar Bhathiyara",
+                        "EntTerm": "172.25.1.161",
+                        "DoorLink": true,
+                        "IsSharedWorkSpace": null
+                    }
+                ],
+                "DLEventFollowersDet": []
+            },
+            {
+                "DLEventID": 100296,
+                "EventSubject": "Star Enterprise",
+                "MeetingType": "InBound",
+                "EventDesc": null,
+                "EventType": 317,
+                "EventFromDate": "2025-10-04T17:20:01",
+                "EventToDate": "2025-10-04T17:50:25.537",
+                "EventAllDays": false,
+                "EventStatusID": 2,
+                "EventEntDt": "2025-09-20T17:20:04.967",
+                "EventUpdDt": "2025-09-20T18:52:58.627",
+                "MeetingTypeID": 1,
+                "EventOwnerInTime": "2025-10-04T17:27:05",
+                "EventIsBroadcast": false,
+                "DeviceDetail": "5109E7DE-05BC-4D00-A273-FECC44CC0491",
+                "OnResourceBeforeMinutes": 15,
+                "LocationID": 2,
+                "EventLocationID": 1,
+                "EventLocation": "Aether",
+                "EventMainStatusID": 174,
+                "CreatedByUserID": 6,
+                "CreatedByUserName": "Akash Mandviwala",
+                "CreatedForUserID": 6,
+                "MeetingTypeName": "Meeting",
+                "CreatedForUserName": "Akash Mandviwala",
+                "StatusDesc": "Completed",
+                "DLCategoryID": 28,
+                "LocationName": "Sachin GIDC - 8203",
+                "CreatedforEmpid": 30,
+                "IsExternalInvitee": false,
+                "DLEventParticipents": [
+                    {
+                        "ParticipentLogID": 173776,
+                        "PersonID": 752221,
+                        "IsAttending": "Y",
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/PersonDocument/PersonPhoto/",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100296,
+                        "IsEmployee": false,
+                        "PersonName": "Mr. Irshad Khan",
+                        "PersonDepartment": "N/A",
+                        "PersonDesignation": "Purchase Manager",
+                        "PersonCompany": "Star Enterprises",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "",
+                        "ActualCheckInTime": "2025-10-04T17:27:00.403",
+                        "ActualCheckOutTime": "2025-10-04T17:59:16.71",
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Irshad Khan",
+                                "DoorName": "Earth",
+                                "PersonID": 752221,
+                                "CardNo": "S2V175",
+                                "Datetimes": null
+                            },
+                            {
+                                "PersonName": "Irshad Khan",
+                                "DoorName": "Fire",
+                                "PersonID": 752221,
+                                "CardNo": "S2V175",
+                                "Datetimes": null
+                            }
+                        ]
+                    },
+                    {
+                        "ParticipentLogID": 173777,
+                        "PersonID": 752095,
+                        "IsAttending": "Y",
+                        "PersonPhotoName": "http://myapp.airis.co.in/src/App/ClientResources/EmployeeDocument/3104_Personal.jpeg",
+                        "ShowAs": 1,
+                        "IsCoHost": false,
+                        "DLEventID": 100296,
+                        "IsEmployee": true,
+                        "PersonName": "Mr. Siddharth Prajapati",
+                        "PersonDepartment": "HR & IR Team",
+                        "PersonDesignation": "Assistant HR",
+                        "PersonCompany": "Aether Industries Limited",
+                        "MeetingRoomAddMe": false,
+                        "IsPersonActive": true,
+                        "EmpCode": "3104",
+                        "ActualCheckInTime": null,
+                        "ActualCheckOutTime": null,
+                        "ParticipentPunchDetail": [
+                            {
+                                "PersonName": "Siddharth Prajapati",
+                                "DoorName": "Fire",
+                                "PersonID": 752095,
+                                "CardNo": "3104",
+                                "Datetimes": "2025-10-04T17:31:18"
+                            },
+                            {
+                                "PersonName": "Siddharth Prajapati",
+                                "DoorName": "Earth",
+                                "PersonID": 752095,
+                                "CardNo": "3104",
+                                "Datetimes": null
+                            }
+                        ]
+                    }
+                ],
+                "DLEventMatrixDoorDet": [
+                    {
+                        "EvtdirectDID": 71237,
+                        "DLEventID": 100296,
+                        "DoorID": "d_516",
+                        "DoorName": "Fire",
+                        "Entdt": "2025-10-04T17:28:58.157",
+                        "DoorGroupID": null,
+                        "DoorType": null,
+                        "EntUser": "Akash Mandviwala",
+                        "EntTerm": "172.25.1.161",
+                        "DoorLink": true,
+                        "IsSharedWorkSpace": null
+                    },
+                    {
+                        "EvtdirectDID": 71238,
+                        "DLEventID": 100296,
+                        "DoorID": "d_741",
+                        "DoorName": "Earth",
+                        "Entdt": "2025-10-04T17:28:58.157",
+                        "DoorGroupID": null,
+                        "DoorType": null,
+                        "EntUser": "Akash Mandviwala",
+                        "EntTerm": "172.25.1.161",
+                        "DoorLink": true,
+                        "IsSharedWorkSpace": null
+                    }
+                ],
+                "DLEventFollowersDet": []
+            }
+        ]
+    }
+}
