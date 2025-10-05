@@ -9,7 +9,7 @@ class WatchFacePainter extends CustomPainter {
   final List<Meeting> meetings;
   final DateTime currentTime;
   final Function(Meeting?)? onSegmentTap;
-
+  final Map<Path, Meeting> _segmentPaths = {}; // For hit detection
   WatchFacePainter({required this.meetings, required this.currentTime, this.onSegmentTap});
 
   @override
@@ -24,6 +24,16 @@ class WatchFacePainter extends CustomPainter {
     _drawFilledCaretShape(canvas, center, radius / 2, radius / 2);
     _drawFilledCaretShape1(canvas, center, radius / 2, radius / 2);
     // _drawCaretShape(canvas, center, radius / 2, radius / 2);
+  }
+
+  Meeting? hitTestCheck(Offset position) {
+    for (final entry in _segmentPaths.entries) {
+      final path = entry.key;
+      if (path.contains(position)) {
+        return entry.value;
+      }
+    }
+    return null;
   }
 
   void _drawWatchSegments(Canvas canvas, Offset center, double radius) {
@@ -43,7 +53,8 @@ class WatchFacePainter extends CustomPainter {
       ..color = Colors.black
       ..style = PaintingStyle.stroke
       ..strokeWidth = 4;
-
+    // Define path for the arc segment
+    final path = Path();
     const totalMinutesInDay = 12 * 60;
     final segmentAngle = (5 / totalMinutesInDay) * 2 * pi;
 
@@ -84,6 +95,9 @@ class WatchFacePainter extends CustomPainter {
         final start = Offset(center.dx + (radius - innerOffset) * cos(angle), center.dy + (radius - innerOffset) * sin(angle));
         final end = Offset(center.dx + (radius + outerOffset) * cos(angle), center.dy + (radius + outerOffset) * sin(angle));
 
+        if (meeting != null) {
+          _segmentPaths[path] = meeting;
+        }
         // Bold for hour marks (including 12 o’clock)
         canvas.drawLine(start, end, isHourMark ? hourSeparatorPaint : separatorPaint);
       }
@@ -112,6 +126,7 @@ class WatchFacePainter extends CustomPainter {
     final topAngle = -pi / 2;
     final topStart = Offset(center.dx + (radius - 15) * cos(topAngle), center.dy + (radius - 15) * sin(topAngle));
     final topEnd = Offset(center.dx + (radius + 20) * cos(topAngle), center.dy + (radius + 20) * sin(topAngle));
+
     canvas.drawLine(topStart, topEnd, hourSeparatorPaint);
   }
 

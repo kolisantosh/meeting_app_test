@@ -197,16 +197,37 @@ class _DashboardState extends State<Dashboard> {
     return GestureDetector(
       onTapUp: (details) {
         _handleWatchTap(context, details, state);
+        // final localPosition = details.localPosition;
+        // final tappedMeeting = _findMeetingAtPosition(localPosition);
+        // onSegmentTap?.call(tappedMeeting);
       },
       child: Center(
         child: AspectRatio(
           aspectRatio: 1,
           child: Padding(
             padding: const EdgeInsets.all(20.0),
-            child: CustomPaint(
-              painter: WatchFacePainter(meetings: state.meetings, currentTime: state.currentTime),
-              child: Container(),
-            ),
+            child:
+                // WatchFaceWidget(
+                //   meetings: state.meetings,
+                //   currentTime: DateTime.now(),
+                //   onSegmentTap: (meeting) {
+                //     if (meeting != null) {
+                //       print("Tapped meeting: ${meeting.eventSubject}");
+                //       // Show a dialog, navigate, etc.
+                //     }
+                //   },
+                // ),
+                CustomPaint(
+                  painter: WatchFacePainter(
+                    meetings: state.meetings,
+                    currentTime: state.currentTime,
+                    onSegmentTap: (meeting) {
+                      print("meeting.....");
+                      print(meeting.toString());
+                    },
+                  ),
+                  child: Container(),
+                ),
           ),
         ),
       ),
@@ -231,9 +252,8 @@ class _DashboardState extends State<Dashboard> {
     //   return;
     // }
 
-    // 🧭 Calculate angle (0 at top, increasing clockwise)
     double angle = atan2(dy, dx);
-    angle = (angle + pi / 2) % (2 * pi); // Shift 0° to top (12 o'clock)
+    angle = (angle + pi / 2) % (2 * pi); // Shift to 12 o'clock
     if (angle < 0) angle += 2 * pi;
 
     // ⏱️ There are 144 segments (12h × 12 segments/hour × 5 minutes)
@@ -241,14 +261,14 @@ class _DashboardState extends State<Dashboard> {
     final segmentAngle = (2 * pi) / totalSegments;
     final segmentIndex = (angle ~/ segmentAngle).toInt();
 
-    // 🕒 Get meeting for that segment
     final meeting = _getMeetingForSegment(segmentIndex, state.meetings, state.currentTime);
 
-    if (meeting != null) {
+    if (meeting != null && meeting.eventSubject.isNotEmpty) {
       debugPrint("✅ Tapped meeting: ${meeting.eventSubject}");
       Navigator.pushNamed(context, RoutesName.details, arguments: meeting);
     } else {
       debugPrint("ℹ️ No meeting at segment $segmentIndex");
+      Navigator.pushNamed(context, RoutesName.details, arguments: state.meetings[0]);
     }
   }
 
