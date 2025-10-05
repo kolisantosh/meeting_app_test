@@ -2,7 +2,6 @@ import 'dart:math';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fluttertest/config/image/imape_path.dart';
-import 'package:fluttertest/config/routes/routes.dart';
 import 'package:fluttertest/config/routes/routes_name.dart';
 
 import '../../bloc/meeting/meeting_bloc.dart';
@@ -24,7 +23,7 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return BaseScreen(
-      child:  BlocBuilder<MeetingBloc, MeetingState>(
+      child: BlocBuilder<MeetingBloc, MeetingState>(
         builder: (context, state) {
           final themeColor = AppColors.getThemeColor(state.watchStatus);
 
@@ -43,40 +42,24 @@ class _DashboardState extends State<Dashboard> {
             ),
           );
         },
-      )
-
-
+      ),
     );
   }
-
-
 
   Widget _buildPortraitLayout(BuildContext context, MeetingState state, Color themeColor) {
     return Column(
       children: [
-        Container(
-          height: 4,
-          color: themeColor,
-        ),
+        Container(height: 4, color: themeColor),
         Expanded(
           child: Row(
             children: [
-              Expanded(
-                flex: 2,
-                child: _buildLeftPanel(context, state, themeColor),
-              ),
-              Expanded(
-                flex: 3,
-                child: _buildWatchFace(context, state),
-              ),
+              Expanded(flex: 2, child: _buildLeftPanel(context, state, themeColor)),
+              Expanded(flex: 3, child: _buildWatchFace(context, state)),
             ],
           ),
         ),
         _buildBottomIcons(themeColor),
-        Container(
-          height: 4,
-          color: themeColor,
-        ),
+        Container(height: 4, color: themeColor),
       ],
     );
   }
@@ -84,36 +67,24 @@ class _DashboardState extends State<Dashboard> {
   Widget _buildLandscapeLayout(BuildContext context, MeetingState state, Color themeColor) {
     return Column(
       children: [
-        Container(
-          height: 4,
-          color: themeColor,
-        ),
+        Container(height: 4, color: themeColor),
         Expanded(
           child: Row(
             children: [
-              Expanded(
-                child: _buildLeftPanel(context, state, themeColor),
-              ),
-              Expanded(
-                child: _buildWatchFace(context, state),
-              ),
+              Expanded(child: _buildLeftPanel(context, state, themeColor)),
+              Expanded(child: _buildWatchFace(context, state)),
             ],
           ),
         ),
         _buildBottomIcons(themeColor),
-        Container(
-          height: 4,
-          color: themeColor,
-        ),
+        Container(height: 4, color: themeColor),
       ],
     );
   }
 
   Widget _buildLeftPanel(BuildContext context, MeetingState state, Color themeColor) {
     final meeting = state.currentMeeting;
-    final doorName = meeting?.doors.isNotEmpty == true
-        ? meeting!.doors.first.doorName
-        : 'Fire';
+    final doorName = meeting?.doors.isNotEmpty == true ? meeting!.doors.first.doorName : 'Fire';
 
     return Padding(
       padding: const EdgeInsets.all(20.0),
@@ -124,35 +95,25 @@ class _DashboardState extends State<Dashboard> {
           children: [
             Text(
               doorName,
-              style: TextStyle(
-                color: themeColor,
-                fontSize: 48,
-                fontWeight: FontWeight.bold,
-              ),
+              style: TextStyle(color: themeColor, fontSize: 48, fontWeight: FontWeight.bold),
             ),
             const SizedBox(height: 8),
-            Text(
-              TimeHelpers.formatDate(state.currentTime),
-              style: TextStyle(
-                color: themeColor,
-                fontSize: 18,
-              ),
-            ),
+            Text(TimeHelpers.formatDate(state.currentTime), style: TextStyle(color: themeColor, fontSize: 18)),
             const SizedBox(height: 16),
             RichText(
               text: TextSpan(
-                style: TextStyle(
-                  color: themeColor,
-                  fontSize: 64,
-                  height: 1.0,
-                ),
+                style: TextStyle(color: themeColor, fontSize: 64, height: 1.0),
                 children: [
                   TextSpan(
-                    text: TimeHelpers.formatFullTime(state.currentTime).substring(0, 4), // hours
+                    text: TimeHelpers.formatFullTime(
+                      state.currentTime,
+                    ).substring(0, TimeHelpers.formatFullTime(state.currentTime).length - 2), // hours
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   TextSpan(
-                    text: TimeHelpers.formatFullTime(state.currentTime).substring(4), // rest (minutes, seconds)
+                    text: TimeHelpers.formatFullTime(
+                      state.currentTime,
+                    ).substring(TimeHelpers.formatFullTime(state.currentTime).length - 2), // rest (minutes, seconds)
                     style: TextStyle(fontWeight: FontWeight.normal, fontSize: 20),
                   ),
                 ],
@@ -163,11 +124,7 @@ class _DashboardState extends State<Dashboard> {
             if (meeting != null) ...[
               Text(
                 '${meeting.meetingType} : ${meeting.eventSubject}',
-                style: TextStyle(
-                  color: themeColor,
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                ),
+                style: TextStyle(color: themeColor, fontSize: 18, fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 24),
               Row(
@@ -178,19 +135,9 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         Text(
                           'Start',
-                          style: TextStyle(
-                            color: themeColor,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style: TextStyle(color: themeColor, fontSize: 16, fontWeight: FontWeight.bold),
                         ),
-                        Text(
-                          TimeHelpers.formatTimeWithPeriod(meeting.eventFromDate),
-                          style: TextStyle(
-                            color: themeColor,
-                            fontSize: 16,
-                          ),
-                        ),
+                        Text(TimeHelpers.formatTimeWithPeriod(meeting.eventFromDate), style: TextStyle(color: themeColor, fontSize: 16)),
                       ],
                     ),
                   ),
@@ -200,19 +147,9 @@ class _DashboardState extends State<Dashboard> {
                       children: [
                         Text(
                           'End',
-                          style: TextStyle(
-                            color: themeColor,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
+                          style: TextStyle(color: themeColor, fontWeight: FontWeight.bold, fontSize: 16),
                         ),
-                        Text(
-                          TimeHelpers.formatTimeWithPeriod(meeting.eventToDate),
-                          style: TextStyle(
-                            color: themeColor,
-                            fontSize: 16,
-                          ),
-                        ),
+                        Text(TimeHelpers.formatTimeWithPeriod(meeting.eventToDate), style: TextStyle(color: themeColor, fontSize: 16)),
                       ],
                     ),
                   ),
@@ -267,12 +204,8 @@ class _DashboardState extends State<Dashboard> {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: CustomPaint(
-              painter: WatchFacePainter(
-                meetings: state.meetings,
-                currentTime: state.currentTime,
-              ),
-              child: Container(
-              ),
+              painter: WatchFacePainter(meetings: state.meetings, currentTime: state.currentTime),
+              child: Container(),
             ),
           ),
         ),
@@ -291,26 +224,31 @@ class _DashboardState extends State<Dashboard> {
     final dx = localPosition.dx - center.dx;
     final dy = localPosition.dy - center.dy;
     final distance = sqrt(dx * dx + dy * dy);
-    print("meeting======>${state.meetings[0]}");
-    Navigator.pushNamed(context, RoutesName.details,arguments: state.meetings[0]);
 
-    if (distance < radius - 40 || distance > radius + 40) {
-      return;
-    }
+    // 🟢 Check if tap is within the visible ring thickness (approx 15px ring)
+    // if (distance < radius - 20 || distance > radius + 20) {
+    //   debugPrint("❌ Tap outside ring area");
+    //   return;
+    // }
 
-    var angle = atan2(dy, dx);
+    // 🧭 Calculate angle (0 at top, increasing clockwise)
+    double angle = atan2(dy, dx);
+    angle = (angle + pi / 2) % (2 * pi); // Shift 0° to top (12 o'clock)
     if (angle < 0) angle += 2 * pi;
-    angle = (angle + pi / 2) % (2 * pi);
 
-    final segmentIndex = ((angle / (2 * pi)) * 144).floor();
+    // ⏱️ There are 144 segments (12h × 12 segments/hour × 5 minutes)
+    const totalSegments = 144;
+    final segmentAngle = (2 * pi) / totalSegments;
+    final segmentIndex = (angle ~/ segmentAngle).toInt();
+
+    // 🕒 Get meeting for that segment
     final meeting = _getMeetingForSegment(segmentIndex, state.meetings, state.currentTime);
 
-
     if (meeting != null) {
-      Navigator.pushNamed(context, RoutesName.details,arguments: meeting);
-    }else{
-      print("meeting======>$meeting");
-      print("meeting======>$details");
+      debugPrint("✅ Tapped meeting: ${meeting.eventSubject}");
+      Navigator.pushNamed(context, RoutesName.details, arguments: meeting);
+    } else {
+      debugPrint("ℹ️ No meeting at segment $segmentIndex");
     }
   }
 
@@ -329,14 +267,27 @@ class _DashboardState extends State<Dashboard> {
       final meetingEndMinutes = meetingEndHour * 60 + meetingEndMinute;
       final currentSegmentMinutes = segmentMinutes;
 
-      if (currentSegmentMinutes >= meetingStartMinutes &&
-          currentSegmentMinutes < meetingEndMinutes) {
+      if (currentSegmentMinutes >= meetingStartMinutes && currentSegmentMinutes < meetingEndMinutes) {
         return meeting;
       }
-
     }
-
-    return null;
+    print("object==>error");
+    return Meeting(
+      eventFromDate: currentTime,
+      eventToDate: currentTime.add(Duration(minutes: 5)),
+      dlEventID: 1,
+      eventSubject: '',
+      meetingType: '',
+      meetingTypeName: '',
+      createdByUserName: '',
+      createdForUserName: '',
+      statusDesc: '',
+      eventLocation: '',
+      locationName: '',
+      participants: [],
+      followers: [],
+      doors: [],
+    );
   }
 
   Widget _buildBottomIcons(Color themeColor) {

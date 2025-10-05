@@ -1,8 +1,6 @@
 import 'dart:math';
-import 'dart:ui' as ui;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertest/config/image/imape_path.dart';
 
 import '../../config/color/app_colors.dart';
 import '../../model/meeting.dart';
@@ -12,11 +10,7 @@ class WatchFacePainter extends CustomPainter {
   final DateTime currentTime;
   final Function(Meeting?)? onSegmentTap;
 
-  WatchFacePainter({
-    required this.meetings,
-    required this.currentTime,
-    this.onSegmentTap,
-  });
+  WatchFacePainter({required this.meetings, required this.currentTime, this.onSegmentTap});
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -26,69 +20,41 @@ class WatchFacePainter extends CustomPainter {
     _drawWatchSegments(canvas, center, radius);
     _drawHourMarkers(canvas, center, radius);
     // _drawClockHand(canvas, center, radius);
-    // _drawVShape(canvas,center,radius);
-    // _drawFilledCaretShape(canvas,center,radius,radius);
-    _drawCaretShape(canvas,center,radius,radius);
-
-
-
-  }
-  void _drawCaretShape(Canvas canvas, Offset center, double width, double height) {
-    final path = Path();
-    final paint = Paint()
-      ..color = AppColors.red
-      ..style = PaintingStyle.fill
-      ..strokeWidth = 3;
-    // Left bottom point
-    path.moveTo(center.dx - width / 2, center.dy + height / 2);
-
-    // Top middle point
-    path.lineTo(center.dx, center.dy - height / 2);
-
-    // Right bottom point
-    path.lineTo(center.dx + width / 2, center.dy + height / 2);
-
-    canvas.drawPath(path, paint);
-  }
-
-
-// Loads an image from assets as ui.Image
-  Future<ui.Image> loadUiImage(String assetPath) async {
-    final data = await rootBundle.load(assetPath);
-    final bytes = data.buffer.asUint8List();
-    final codec = await ui.instantiateImageCodec(bytes);
-    final frame = await codec.getNextFrame();
-    return frame.image;
-  }
-  void _drawLogo(Canvas canvas, Size size, ui.Image image) {
-    final imageSize = 80.0;
-    final centerOffset = Offset(
-      (size.width - imageSize) / 2,
-      (size.height - imageSize) / 2,
-    );
-
-    final srcRect = Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble());
-    final dstRect = Rect.fromLTWH(centerOffset.dx, centerOffset.dy, imageSize, imageSize);
-
-    canvas.drawImageRect(image, srcRect, dstRect, Paint());
+    // _drawVShape(canvas, center, radius);
+    _drawFilledCaretShape(canvas, center, radius / 2, radius / 2);
+    _drawFilledCaretShape1(canvas, center, radius / 2, radius / 2);
+    // _drawCaretShape(canvas, center, radius / 2, radius / 2);
   }
 
   void _drawWatchSegments(Canvas canvas, Offset center, double radius) {
     final segmentPaint = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 15
-      ..strokeCap = StrokeCap.round;
+      ..strokeCap = StrokeCap.square;
 
-    final totalMinutesInDay = 12 * 60;
+    // Thin black line (15-min marks)
+    final separatorPaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2;
+
+    // Thick black line (hour marks)
+    final hourSeparatorPaint = Paint()
+      ..color = Colors.black
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 4;
+
+    const totalMinutesInDay = 12 * 60;
     final segmentAngle = (5 / totalMinutesInDay) * 2 * pi;
 
+    // 🟢 Draw 5-min segments
     for (int i = 0; i < 144; i++) {
       final startAngle = (i * segmentAngle) - pi / 2;
       final meeting = _getMeetingForSegment(i);
 
+      // 🎨 Segment color
       if (meeting != null) {
-        final isOngoing = currentTime.isAfter(meeting.eventFromDate) &&
-            currentTime.isBefore(meeting.eventToDate);
+        final isOngoing = currentTime.isAfter(meeting.eventFromDate) && currentTime.isBefore(meeting.eventToDate);
         final minutesUntilStart = meeting.eventFromDate.difference(currentTime).inMinutes;
         final isUpcoming = minutesUntilStart >= 0 && minutesUntilStart <= 5;
 
@@ -103,14 +69,50 @@ class WatchFacePainter extends CustomPainter {
         segmentPaint.color = AppColors.green;
       }
 
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        startAngle,
-        segmentAngle * 0.8,
-        false,
-        segmentPaint,
-      );
+      // Draw colored segment arc
+      canvas.drawArc(Rect.fromCircle(center: center, radius: radius), startAngle, segmentAngle * 0.8, false, segmentPaint);
+
+      // 🕒 Draw black separator lines
+      if (i % 3 == 0 || i == 0) {
+        // Every 15 min (3 segments) or explicitly the 12 o’clock position
+        final angle = startAngle;
+        final isHourMark = (i % 12 == 0);
+
+        final innerOffset = isHourMark ? 15.0 : 8.0;
+        final outerOffset = isHourMark ? 20.0 : 8.0;
+
+        final start = Offset(center.dx + (radius - innerOffset) * cos(angle), center.dy + (radius - innerOffset) * sin(angle));
+        final end = Offset(center.dx + (radius + outerOffset) * cos(angle), center.dy + (radius + outerOffset) * sin(angle));
+
+        // Bold for hour marks (including 12 o’clock)
+        canvas.drawLine(start, end, isHourMark ? hourSeparatorPaint : separatorPaint);
+      }
     }
+
+    // 🕐 Draw hour numbers (1 to 12)
+    final textPainter = TextPainter(textAlign: TextAlign.center, textDirection: TextDirection.ltr);
+
+    for (int hour = 1; hour <= 12; hour++) {
+      final angle = (hour / 12) * 2 * pi - pi / 2;
+      final textRadius = radius + 30;
+
+      final offset = Offset(center.dx + textRadius * cos(angle), center.dy + textRadius * sin(angle));
+
+      textPainter.text = TextSpan(
+        text: hour.toString(),
+        style: const TextStyle(color: Colors.black, fontSize: 16, fontWeight: FontWeight.bold),
+      );
+      textPainter.layout();
+
+      final textOffset = offset - Offset(textPainter.width / 2, textPainter.height / 2);
+      textPainter.paint(canvas, textOffset);
+    }
+
+    // 🕛 Ensure 12 o’clock line is visible (draw explicitly on top)
+    final topAngle = -pi / 2;
+    final topStart = Offset(center.dx + (radius - 15) * cos(topAngle), center.dy + (radius - 15) * sin(topAngle));
+    final topEnd = Offset(center.dx + (radius + 20) * cos(topAngle), center.dy + (radius + 20) * sin(topAngle));
+    canvas.drawLine(topStart, topEnd, hourSeparatorPaint);
   }
 
   Meeting? _getMeetingForSegment(int segmentIndex) {
@@ -132,8 +134,7 @@ class WatchFacePainter extends CustomPainter {
       final meetingEndMinutes = meetingEndHour * 60 + meetingEndMinute;
       final currentSegmentMinutes = segmentMinutes;
 
-      if (currentSegmentMinutes >= meetingStartMinutes &&
-          currentSegmentMinutes < meetingEndMinutes) {
+      if (currentSegmentMinutes >= meetingStartMinutes && currentSegmentMinutes < meetingEndMinutes) {
         return meeting;
       }
     }
@@ -142,9 +143,7 @@ class WatchFacePainter extends CustomPainter {
   }
 
   void _drawHourMarkers(Canvas canvas, Offset center, double radius) {
-    final textPainter = TextPainter(
-      textDirection: TextDirection.ltr,
-    );
+    final textPainter = TextPainter(textDirection: TextDirection.ltr);
 
     for (int i = 1; i <= 12; i++) {
       final angle = (i * 30 - 90) * pi / 180;
@@ -153,23 +152,17 @@ class WatchFacePainter extends CustomPainter {
 
       textPainter.text = TextSpan(
         text: i.toString(),
-        style: const TextStyle(
-          color: AppColors.grey,
-          fontSize: 20,
-          fontWeight: FontWeight.normal,
-        ),
+        style: const TextStyle(color: AppColors.grey, fontSize: 20, fontWeight: FontWeight.normal),
       );
       textPainter.layout();
-      textPainter.paint(
-        canvas,
-        Offset(x - textPainter.width / 2, y - textPainter.height / 2),
-      );
+      textPainter.paint(canvas, Offset(x - textPainter.width / 2, y - textPainter.height / 2));
     }
   }
+
   void _drawFilledCaretShape(Canvas canvas, Offset center, double width, double height) {
     final path = Path();
     final paint = Paint()
-      ..color = AppColors.yellow
+      ..color = AppColors.red
       ..style = PaintingStyle.fill
       ..strokeWidth = 3;
     path.moveTo(center.dx - width / 2, center.dy + height / 2);
@@ -180,23 +173,43 @@ class WatchFacePainter extends CustomPainter {
     canvas.drawPath(path, paint);
   }
 
-  void _drawVShape(Canvas canvas, Offset center, double size) {
+  void _drawFilledCaretShape1(Canvas canvas, Offset center, double width, double height) {
     final path = Path();
     final paint = Paint()
-      ..color = AppColors.yellow
+      ..color = AppColors.black
       ..style = PaintingStyle.fill
       ..strokeWidth = 3;
-    // Starting from the left upper arm of V
-    path.moveTo(center.dx - size / 2, center.dy - size / 2);
 
-    // Draw line down to the bottom point of V
-    path.lineTo(center.dx, center.dy + size / 2);
+    // 🔽 Shift the shape down by 20 pixels (top padding)
+    final double paddingTop = 20;
+    final double shiftedY = center.dy + paddingTop;
 
-    // Draw line up to the right upper arm of V
-    path.lineTo(center.dx + size / 2, center.dy - size / 2);
+    path.moveTo(center.dx - width / 2, shiftedY + height / 2); // bottom-left
+    path.lineTo(center.dx, shiftedY - height / 3); // top
+    path.lineTo(center.dx + width / 2, shiftedY + height / 2); // bottom-right
+    path.close();
 
     canvas.drawPath(path, paint);
   }
+
+  void _drawCaretShape(Canvas canvas, Offset center, double width, double height) {
+    final path = Path();
+    final paint = Paint()
+      ..color = AppColors.red
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 30;
+    // Left bottom point
+    path.moveTo(center.dx - width / 2, center.dy + height / 2);
+
+    // Top middle point
+    path.lineTo(center.dx, center.dy - height / 3);
+
+    // Right bottom point
+    path.lineTo(center.dx + width / 2, center.dy + height / 2);
+
+    canvas.drawPath(path, paint);
+  }
+
   void _drawClockHand(Canvas canvas, Offset center, double radius) {
     final hour = currentTime.hour % 12;
     final minute = currentTime.minute;
@@ -207,10 +220,7 @@ class WatchFacePainter extends CustomPainter {
     final handLength = radius * 0.6;
 
     path.moveTo(center.dx, center.dy);
-    path.lineTo(
-      center.dx + handLength * cos(angle),
-      center.dy + handLength * sin(angle),
-    );
+    path.lineTo(center.dx + handLength * cos(angle), center.dy + handLength * sin(angle));
 
     final handPaint = Paint()
       ..color = AppColors.yellow
@@ -224,14 +234,8 @@ class WatchFacePainter extends CustomPainter {
     final triangleSize = 40.0;
 
     trianglePath.moveTo(tipX, tipY);
-    trianglePath.lineTo(
-      tipX - triangleSize * cos(angle + pi / 6),
-      tipY - triangleSize * sin(angle + pi / 6),
-    );
-    trianglePath.lineTo(
-      tipX - triangleSize * cos(angle - pi / 6),
-      tipY - triangleSize * sin(angle - pi / 6),
-    );
+    trianglePath.lineTo(tipX - triangleSize * cos(angle + pi / 6), tipY - triangleSize * sin(angle + pi / 6));
+    trianglePath.lineTo(tipX - triangleSize * cos(angle - pi / 6), tipY - triangleSize * sin(angle - pi / 6));
     trianglePath.close();
 
     canvas.drawPath(trianglePath, handPaint);
@@ -239,7 +243,6 @@ class WatchFacePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(WatchFacePainter oldDelegate) {
-    return oldDelegate.currentTime != currentTime ||
-        oldDelegate.meetings != meetings;
+    return oldDelegate.currentTime != currentTime || oldDelegate.meetings != meetings;
   }
 }
