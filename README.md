@@ -17,3 +17,6 @@ samples, guidance on mobile development, and a full API reference.
 
 App Screenshot
 https://drive.google.com/file/d/1NVCE0OsJwgy4ryCZxnr3ZK_VZhqrvhok/view?usp=sharing
+
+App Video
+https://drive.google.com/file/d/1hKOYjvFchbHW0_8kgy_8-a5BweE5X45i/view?usp=sharing
