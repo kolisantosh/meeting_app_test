@@ -1,9 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 
 import '../../config/color/app_colors.dart';
 import '../../model/meeting.dart';
 import '../../services/time_helper.dart';
+import '../../views.dart';
 
 class DetailScreen extends StatelessWidget {
   final Meeting meeting;
@@ -16,20 +16,29 @@ class DetailScreen extends StatelessWidget {
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
-        leading: IconButton(icon: const Icon(Icons.arrow_back, color: AppColors.white), onPressed: () => Navigator.pop(context)),
-        title: const Text('Meeting Summary', style: TextStyle(color: AppColors.white)),
-        actions: [IconButton(icon: const Icon(Icons.more_vert, color: AppColors.grey), onPressed: () {})],
-      ),
-      body: SingleChildScrollView(
-        child: OrientationBuilder(
-          builder: (context, orientation) {
-            if (orientation == Orientation.portrait) {
-              return _buildPortraitContent(context);
-            } else {
-              return _buildLandscapeContent(context);
-            }
-          },
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: AppColors.white),
+          onPressed: () => Navigator.pop(context),
         ),
+        title: const Text(
+          'Meeting Summary',
+          style: TextStyle(color: AppColors.white),
+        ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.more_vert, color: AppColors.grey),
+            onPressed: () {},
+          ),
+        ],
+      ),
+      body: OrientationBuilder(
+        builder: (context, orientation) {
+          if (orientation == Orientation.portrait) {
+            return _buildPortraitContent(context);
+          } else {
+            return _buildLandscapeContent(context);
+          }
+        },
       ),
       bottomNavigationBar: _buildBottomBar(context),
     );
@@ -37,20 +46,29 @@ class DetailScreen extends StatelessWidget {
 
   Widget _buildPortraitContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(20.0.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildTimeline(), const SizedBox(width: 20), Expanded(child: _buildMeetingDetails(context))],
+        children: [
+          _buildTimeline(),
+          SizedBox(width: 20.w),
+          Expanded(child: _buildMeetingDetails(context)),
+        ],
       ),
     );
   }
 
   Widget _buildLandscapeContent(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(20.0),
+      padding: EdgeInsets.all(20.0.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [_buildTimeline(), const SizedBox(width: 20), Expanded(child: _buildMeetingDetails(context))],
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          _buildTimeline(),
+          SizedBox(width: 20.w),
+          Expanded(child: _buildMeetingDetails(context)),
+        ],
       ),
     );
   }
@@ -59,18 +77,58 @@ class DetailScreen extends StatelessWidget {
     final duration = meeting.duration;
 
     return SizedBox(
-      width: 80,
-      child: Column(
+      // width: 80,
+      // height: ScreenUtil().screenHeight,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Text(TimeHelpers.formatFullTime(meeting.eventFromDate), style: const TextStyle(color: AppColors.grey, fontSize: 14)),
-          const SizedBox(height: 8),
-          Container(width: 12, height: 12, decoration: const BoxDecoration(color: AppColors.red, shape: BoxShape.circle)),
-          Container(width: 2, height: 100, color: AppColors.red),
-          Text(TimeHelpers.formatDuration(duration), style: const TextStyle(color: AppColors.grey, fontSize: 12)),
-          Container(width: 2, height: 100, color: AppColors.red),
-          Container(width: 12, height: 12, decoration: const BoxDecoration(color: AppColors.red, shape: BoxShape.circle)),
-          const SizedBox(height: 8),
-          Text(TimeHelpers.formatFullTime(meeting.eventToDate), style: const TextStyle(color: AppColors.grey, fontSize: 14)),
+          Column(
+            children: [
+              Text(
+                TimeHelpers.formatFullTime(meeting.eventFromDate),
+                style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
+              ),
+              Spacer(),
+              Text(
+                TimeHelpers.formatDuration(duration),
+                style: TextStyle(color: AppColors.grey, fontSize: 12.sp),
+              ),
+              Spacer(),
+
+              Text(
+                TimeHelpers.formatFullTime(meeting.eventToDate),
+                style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
+              ),
+            ],
+          ),
+          Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              Container(
+                width: 12.w,
+                height: 12.w,
+                decoration: const BoxDecoration(
+                  color: AppColors.brightRedColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+              Container(
+                width: 2.w,
+                height: ScreenUtil().screenHeight - 325,
+                color: AppColors.brightRedColor,
+              ),
+
+              Container(width: 2, height: 100, color: AppColors.brightRedColor),
+              Container(
+                width: 12.w,
+                height: 12.w,
+                decoration: BoxDecoration(
+                  color: AppColors.brightRedColor,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -80,41 +138,74 @@ class DetailScreen extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(TimeHelpers.formatDate(meeting.eventFromDate), style: const TextStyle(color: AppColors.grey, fontSize: 14)),
-        const SizedBox(height: 8),
+        Text(
+          TimeHelpers.formatDate(meeting.eventFromDate),
+          style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
+        ),
+
+        // SizedBox(height: 8.h),
+        Spacer(),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Text(
                 '${meeting.meetingType} : ${meeting.eventSubject}',
-                style: const TextStyle(color: AppColors.red, fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: AppColors.brightRedColor,
+                  fontSize: 20.sp,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            IconButton(icon: const Icon(Icons.edit, color: AppColors.red, size: 20), onPressed: () {}),
+            IconButton(
+              icon: Icon(
+                Icons.edit,
+                color: AppColors.brightRedColor,
+                size: 20.w,
+              ),
+              onPressed: () {},
+            ),
           ],
         ),
-        const SizedBox(height: 16),
+
+        // SizedBox(height: 16.h),
+        Spacer(),
         Row(
           children: [
-            const Text('Event Status', style: TextStyle(color: AppColors.grey, fontSize: 14)),
-            const SizedBox(width: 20),
-            Text(meeting.statusDesc, style: const TextStyle(color: AppColors.white, fontSize: 14)),
+            Text(
+              'Event Status',
+              style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
+            ),
+            SizedBox(width: 20.w),
+            Text(
+              meeting.statusDesc,
+              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+            ),
           ],
         ),
-        const SizedBox(height: 32),
+
+        // SizedBox(height: 32.h),
+        Spacer(),
         Row(
           children: [
-            const Text('Organizer', style: TextStyle(color: AppColors.grey, fontSize: 16)),
-            const SizedBox(width: 16),
+            Text(
+              'Organizer',
+              style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
+            ),
+            SizedBox(width: 16.w),
             _buildOrganizerCard(),
           ],
         ),
-        const SizedBox(height: 32),
+
+        Spacer(),
+        // SizedBox(height: 32.h),
         _buildAttendees(context),
-        const SizedBox(height: 32),
+        // SizedBox(height: 32.h),
+        Spacer(),
         _buildFollowers(context),
-        const SizedBox(height: 80),
+        // SizedBox(height: 80.h),
+        Spacer(),
       ],
     );
   }
@@ -130,8 +221,8 @@ class DetailScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 24,
-            backgroundColor: AppColors.green,
+            radius: 24.r,
+            backgroundColor: AppColors.brightGreenColor,
             child: CachedNetworkImage(
               imageUrl: meeting.createdByUserName.toString(),
               placeholder: (context, url) => CircularProgressIndicator(),
@@ -139,8 +230,11 @@ class DetailScreen extends StatelessWidget {
             ),
             // const Icon(Icons.person, color: AppColors.white),
           ),
-          const SizedBox(height: 12),
-          Text(meeting.createdByUserName, style: const TextStyle(color: AppColors.white, fontSize: 14)),
+          SizedBox(height: 12.h),
+          Text(
+            meeting.createdByUserName,
+            style: TextStyle(color: AppColors.white, fontSize: 14.sp),
+          ),
         ],
       ),
     );
@@ -152,14 +246,17 @@ class DetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Attendees', style: TextStyle(color: AppColors.grey, fontSize: 16)),
-          const SizedBox(width: 16),
+          Text(
+            'Attendees',
+            style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
+          ),
+          SizedBox(width: 16.w),
           if (meeting.participants.isEmpty) _buildAddButton(context, 'ADD'),
           ...meeting.participants.map(
             (participant) => Padding(
               padding: const EdgeInsets.only(bottom: 0.0),
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12.w),
                 // decoration: BoxDecoration(
                 //   border: Border.all(color: AppColors.grey.withOpacity(0.3)),
                 //   borderRadius: BorderRadius.circular(8),
@@ -168,24 +265,28 @@ class DetailScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircleAvatar(
-                      radius: 24,
+                      radius: 24.r,
                       backgroundColor: AppColors.grey,
                       child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100),
+                        borderRadius: BorderRadius.circular(100.r),
                         child: CachedNetworkImage(
-                          imageUrl: participant.personPhotoName.toString().replaceFirst("http://", "https://"),
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(Icons.person),
+                          imageUrl: participant.personPhotoName
+                              .toString()
+                              .replaceFirst("http://", "https://"),
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.person),
                         ),
                       ),
                       // const Icon(Icons.person, color: AppColors.white),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     Text(
                       participant.personName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         // fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -228,36 +329,43 @@ class DetailScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          const Text('Followers', style: TextStyle(color: AppColors.grey, fontSize: 16)),
-          const SizedBox(width: 16),
+          Text(
+            'Followers',
+            style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
+          ),
+          SizedBox(width: 16.w),
           if (meeting.followers.isEmpty) _buildAddButton(context, 'ADD'),
           ...meeting.followers.map(
             (follower) => Padding(
               padding: const EdgeInsets.only(bottom: 0.0),
               child: Container(
-                padding: const EdgeInsets.all(12),
+                padding: EdgeInsets.all(12.w),
                 // decoration: BoxDecoration(border: Border.all(color: AppColors.grey.withOpacity(0.3)), borderRadius: BorderRadius.circular(8)),
                 child: Column(
                   children: [
                     ClipRRect(
-                      borderRadius: BorderRadius.circular(100),
+                      borderRadius: BorderRadius.circular(100.r),
                       child: CircleAvatar(
-                        radius: 24,
+                        radius: 24.r,
                         backgroundColor: AppColors.grey,
                         child: CachedNetworkImage(
-                          imageUrl: follower.personPhotoName.toString().replaceFirst("http://", "https://"),
-                          placeholder: (context, url) => CircularProgressIndicator(),
-                          errorWidget: (context, url, error) => Icon(Icons.person),
+                          imageUrl: follower.personPhotoName
+                              .toString()
+                              .replaceFirst("http://", "https://"),
+                          placeholder: (context, url) =>
+                              CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              Icon(Icons.person),
                         ),
                         // const Icon(Icons.person, color: AppColors.white),
                       ),
                     ),
-                    const SizedBox(height: 12),
+                    SizedBox(height: 12.h),
                     Text(
                       follower.personName,
-                      style: const TextStyle(
+                      style: TextStyle(
                         color: AppColors.white,
-                        fontSize: 14,
+                        fontSize: 14.sp,
                         // fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -299,26 +407,38 @@ class DetailScreen extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 50,
-          height: 50,
-          margin: const EdgeInsets.only(top: 0),
+          width: 50.w,
+          height: 50.w,
+          margin: EdgeInsets.only(top: 0.h),
           // decoration: BoxDecoration(
           //   shape: BoxShape.circle
           // ),
           child: OutlinedButton(
             onPressed: () {},
             style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.red,
-              side: const BorderSide(color: AppColors.red, width: 2),
-              padding: const EdgeInsets.symmetric(vertical: 14),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+              foregroundColor: AppColors.brightRedColor,
+              side: BorderSide(color: AppColors.brightRedColor, width: 2.w),
+              padding: EdgeInsets.symmetric(vertical: 14.h),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(50.r),
+              ),
             ),
-            child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [const Icon(Icons.add, color: Colors.red, size: 24)]),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [Icon(Icons.add, color: Colors.red, size: 24.w)],
+            ),
           ),
         ),
-        const SizedBox(height: 8),
+        SizedBox(height: 8.h),
 
-        Text(label, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: AppColors.brightRedColor)),
+        Text(
+          label,
+          style: TextStyle(
+            fontSize: 14.sp,
+            fontWeight: FontWeight.bold,
+            color: AppColors.brightRedColor,
+          ),
+        ),
       ],
     );
   }
@@ -326,14 +446,17 @@ class DetailScreen extends StatelessWidget {
   Widget _buildBottomBar(BuildContext context) {
     return Container(
       color: AppColors.black,
-      padding: const EdgeInsets.all(16.0),
+      padding: EdgeInsets.all(16.0.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           TextButton.icon(
             onPressed: () {},
             icon: const Icon(Icons.check_circle_outline, color: AppColors.grey),
-            label: const Text('Complete Event', style: TextStyle(color: AppColors.grey)),
+            label: const Text(
+              'Complete Event',
+              style: TextStyle(color: AppColors.grey),
+            ),
           ),
           TextButton.icon(
             onPressed: () {},

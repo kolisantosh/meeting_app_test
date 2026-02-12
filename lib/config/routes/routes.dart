@@ -1,4 +1,5 @@
 import 'package:fluttertest/config/routes/routes_name.dart';
+import 'package:fluttertest/view/login/login_page.dart';
 import 'package:fluttertest/view/meeting_details/details_screen.dart';
 import 'package:fluttertest/views.dart';
 
@@ -6,13 +7,15 @@ import '../../model/meeting.dart';
 import '../../view/dashboard/dashboard.dart';
 import '../../view/splash/splash.dart';
 
-class Routes{
-  static Route<dynamic> generateRoutes(RouteSettings setting){
-    switch(setting.name){
+class Routes {
+  static Route<dynamic> generateRoutes(RouteSettings setting) {
+    switch (setting.name) {
       case RoutesName.splash:
-        return MaterialPageRoute(builder: (context)=>SplashScreen());
+        return MaterialPageRoute(builder: (context) => SplashScreen());
+      case RoutesName.login:
+        return MaterialPageRoute(builder: (context) => LoginPage());
       case RoutesName.dashboard:
-        return MaterialPageRoute(builder: (context)=>Dashboard());
+        return MaterialPageRoute(builder: (context) => Dashboard());
       case RoutesName.details:
         final args = setting.arguments;
         if (args is Meeting) {
@@ -25,9 +28,10 @@ class Routes{
           );
         }
 
-        default:
-        return MaterialPageRoute(builder:(context)=>Scaffold(body: Text("no route denied"),));
-
+      default:
+        return MaterialPageRoute(
+          builder: (context) => Scaffold(body: Text("no route denied")),
+        );
     }
   }
 }
