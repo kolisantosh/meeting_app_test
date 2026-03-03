@@ -4,7 +4,7 @@ import 'door.dart';
 import 'follower.dart';
 import 'participant.dart';
 
-class Meeting extends Equatable {
+class MeetingModel extends Equatable {
   final int dlEventID;
   final String eventSubject;
   final String meetingType;
@@ -36,6 +36,7 @@ class Meeting extends Equatable {
   final int createdForUserID;
   final String createdForUserName;
   final int createdForEmpId;
+  final String empCode;
 
   final String statusDesc;
   final bool isExternalInvitee;
@@ -44,7 +45,7 @@ class Meeting extends Equatable {
   final List<Follower> followers;
   final List<Door> doors;
 
-  const Meeting({
+  const MeetingModel({
     required this.dlEventID,
     required this.eventSubject,
     required this.meetingType,
@@ -70,6 +71,7 @@ class Meeting extends Equatable {
     required this.createdForUserID,
     required this.createdForUserName,
     required this.createdForEmpId,
+    required this.empCode,
     required this.statusDesc,
     required this.isExternalInvitee,
     required this.participants,
@@ -77,8 +79,8 @@ class Meeting extends Equatable {
     required this.doors,
   });
 
-  factory Meeting.fromJson(Map<String, dynamic> json) {
-    return Meeting(
+  factory MeetingModel.fromJson(Map<String, dynamic> json) {
+    return MeetingModel(
       dlEventID: json['DLEventID'] ?? 0,
       eventSubject: json['EventSubject'] ?? '',
       meetingType: json['MeetingType'] ?? '',
@@ -105,6 +107,7 @@ class Meeting extends Equatable {
       createdByUserName: json['CreatedByUserName'] ?? '',
       createdForUserID: json['CreatedForUserID'] ?? 0,
       createdForUserName: json['CreatedForUserName'] ?? '',
+      empCode: json['EmpCode'] ?? '',
       createdForEmpId: json['CreatedforEmpid'] ?? 0,
       statusDesc: json['StatusDesc'] ?? '',
       isExternalInvitee: json['IsExternalInvitee'] ?? false,
@@ -155,6 +158,7 @@ class Meeting extends Equatable {
     createdForUserID,
     createdForUserName,
     createdForEmpId,
+    empCode,
     statusDesc,
     isExternalInvitee,
     participants,

@@ -1,6 +1,6 @@
 import 'package:equatable/equatable.dart';
 
-import '../../model/meeting.dart';
+import '../../models/meeting/meeting_model.dart';
 
 enum MeetingStatus { initial, loading, success, failure }
 
@@ -8,11 +8,17 @@ enum WatchStatus { green, yellow, red }
 
 class MeetingState extends Equatable {
   final MeetingStatus status;
-  final List<Meeting> meetings;
+  final List<MeetingModel> meetings;
   final DateTime currentTime;
   final WatchStatus watchStatus;
-  final Meeting? currentMeeting;
+  final MeetingModel? currentMeeting;
   final String? errorMessage;
+
+  // New fields for Extend/Action Logic
+  final String selectionType; // e.g., "extendMeeting", "addWater"
+  final bool showHostSelection;
+  final int intExtendStatus; // 322, 323, 324 etc.
+  final int pendingExtensionMinutes;
 
   const MeetingState({
     this.status = MeetingStatus.initial,
@@ -21,15 +27,23 @@ class MeetingState extends Equatable {
     this.watchStatus = WatchStatus.green,
     this.currentMeeting,
     this.errorMessage,
+    this.selectionType = "",
+    this.showHostSelection = false,
+    this.intExtendStatus = 0,
+    this.pendingExtensionMinutes = 0,
   });
 
   MeetingState copyWith({
     MeetingStatus? status,
-    List<Meeting>? meetings,
+    List<MeetingModel>? meetings,
     DateTime? currentTime,
     WatchStatus? watchStatus,
-    Meeting? currentMeeting,
+    MeetingModel? currentMeeting,
     String? errorMessage,
+    String? selectionType,
+    bool? showHostSelection,
+    int? intExtendStatus,
+    int? pendingExtensionMinutes,
   }) {
     return MeetingState(
       status: status ?? this.status,
@@ -38,6 +52,11 @@ class MeetingState extends Equatable {
       watchStatus: watchStatus ?? this.watchStatus,
       currentMeeting: currentMeeting ?? this.currentMeeting,
       errorMessage: errorMessage ?? this.errorMessage,
+      selectionType: selectionType ?? this.selectionType,
+      showHostSelection: showHostSelection ?? this.showHostSelection,
+      intExtendStatus: intExtendStatus ?? this.intExtendStatus,
+      pendingExtensionMinutes:
+          pendingExtensionMinutes ?? this.pendingExtensionMinutes,
     );
   }
 
@@ -49,5 +68,9 @@ class MeetingState extends Equatable {
     watchStatus,
     currentMeeting,
     errorMessage,
+    selectionType,
+    showHostSelection,
+    intExtendStatus,
+    pendingExtensionMinutes,
   ];
 }

@@ -1,12 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:fluttertest/config/constants/imape_path.dart';
 
-import '../../config/color/app_colors.dart';
-import '../../model/meeting.dart';
+import '../../config/constants/app_colors.dart';
+import '../../models/meeting/meeting_model.dart';
 import '../../services/time_helper.dart';
 import '../../views.dart';
 
 class DetailScreen extends StatelessWidget {
-  final Meeting meeting;
+  final MeetingModel meeting;
 
   const DetailScreen({super.key, required this.meeting});
 
@@ -16,6 +18,7 @@ class DetailScreen extends StatelessWidget {
       backgroundColor: AppColors.black,
       appBar: AppBar(
         backgroundColor: AppColors.black,
+        elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: AppColors.white),
           onPressed: () => Navigator.pop(context),
@@ -24,417 +27,413 @@ class DetailScreen extends StatelessWidget {
           'Meeting Summary',
           style: TextStyle(color: AppColors.white),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.more_vert, color: AppColors.grey),
-            onPressed: () {},
-          ),
-        ],
       ),
-      body: OrientationBuilder(
-        builder: (context, orientation) {
-          if (orientation == Orientation.portrait) {
-            return _buildPortraitContent(context);
-          } else {
-            return _buildLandscapeContent(context);
-          }
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+          return Padding(
+            padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 15.h),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // 1. LEFT SIDE: TIMELINE
+                _buildTimeline(constraints.maxHeight),
+
+                SizedBox(width: 40.w),
+
+                // 2. RIGHT SIDE: CONTENT
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildHeaderSection(),
+                      SizedBox(height: 20.h),
+
+                      // This expanded section distributes the 3 rows evenly
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          children: [
+                            _buildSplitRow(
+                              'Event Status',
+                              Text(
+                                meeting.statusDesc,
+                                style: TextStyle(
+                                  color: AppColors.textDisableColor,
+                                  fontSize: 18.sp,
+                                ),
+                              ),
+                            ),
+
+                            _buildSplitRow(
+                              'Organizer',
+                              Row(
+                                children: [
+                                  _buildPersonCard(
+                                    name: meeting.createdForUserName,
+                                    imageUrl: null,
+                                    borderColor: AppColors.solidGreenColor,
+                                    showRemove: false,
+                                    subTitle: "",
+                                  ),
+                                  ...meeting.participants
+                                      .where(
+                                        (p) =>
+                                            p.isCoHost &&
+                                            (p.isPersonActive ||
+                                                p.meetingRoomAddMe),
+                                      )
+                                      .map(
+                                        (p) => _buildPersonCard(
+                                          name: p.personName,
+                                          imageUrl: p.personPhotoName,
+                                          borderColor: p.isAttending == "Y"
+                                              ? AppColors.solidGreenColor
+                                              : p.isAttending == "N"
+                                              ? AppColors.brightRedColor
+                                              : AppColors.grey,
+                                          subTitle: "[Co-Host]",
+                                          statusIconPath: p.isAttending == "Y"
+                                              ? p.participantPunchDetail !=
+                                                            null &&
+                                                        p
+                                                                .participantPunchDetail
+                                                                .first
+                                                                .datetimes !=
+                                                            null
+                                                    ? ImagePath.checkBoxFill
+                                                    : ImagePath.checkBox
+                                              : ImagePath.questionLine,
+                                          statusColor: p.isAttending == "Y"
+                                              ? AppColors.brightGreenColor
+                                              : p.isAttending == "N"
+                                              ? AppColors.brightRedColor
+                                              : AppColors.grey,
+                                        ),
+                                      ),
+                                ],
+                              ),
+                            ),
+
+                            _buildSplitRow(
+                              'Attendees',
+                              Row(
+                                children: [
+                                  ...meeting.participants
+                                      .where(
+                                        (p) =>
+                                            !p.isCoHost &&
+                                            (p.isPersonActive ||
+                                                p.meetingRoomAddMe),
+                                      )
+                                      .map(
+                                        (p) => _buildPersonCard(
+                                          name: p.personName,
+                                          imageUrl: p.personPhotoName,
+                                          borderColor: p.isAttending == "Y"
+                                              ? AppColors.solidGreenColor
+                                              : p.isAttending == "N"
+                                              ? AppColors.brightRedColor
+                                              : AppColors.grey,
+                                          statusIconPath: p.isAttending == "Y"
+                                              ? p
+                                                            .participantPunchDetail
+                                                            .first
+                                                            .datetimes !=
+                                                        null
+                                                    ? ImagePath.checkBoxFill
+                                                    : ImagePath.checkBox
+                                              : p.isAttending == "N"
+                                              ? ImagePath.completeEvent
+                                              : ImagePath.questionLine,
+                                          statusColor: p.isAttending == "Y"
+                                              ? AppColors.brightGreenColor
+                                              : p.isAttending == "N"
+                                              ? AppColors.brightRedColor
+                                              : AppColors.grey,
+                                        ),
+                                      ),
+                                  _buildAddButton('ADD'),
+                                ],
+                              ),
+                            ),
+
+                            _buildSplitRow(
+                              'Followers',
+                              Row(
+                                children: [
+                                  ...meeting.followers.map(
+                                    (f) => _buildPersonCard(
+                                      name: f.personName,
+                                      imageUrl: f.personPhotoName,
+                                      borderColor: AppColors.grey,
+                                    ),
+                                  ),
+                                  _buildAddButton('ADD'),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          );
         },
       ),
-      bottomNavigationBar: _buildBottomBar(context),
+      floatingActionButton: _buildBottomBar(context),
     );
   }
 
-  Widget _buildPortraitContent(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20.0.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildTimeline(),
-          SizedBox(width: 20.w),
-          Expanded(child: _buildMeetingDetails(context)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildLandscapeContent(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(20.0.w),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
-        children: [
-          _buildTimeline(),
-          SizedBox(width: 20.w),
-          Expanded(child: _buildMeetingDetails(context)),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTimeline() {
-    final duration = meeting.duration;
-
-    return SizedBox(
-      // width: 80,
-      // height: ScreenUtil().screenHeight,
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Column(
-            children: [
-              Text(
-                TimeHelpers.formatFullTime(meeting.eventFromDate),
-                style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
-              ),
-              Spacer(),
-              Text(
-                TimeHelpers.formatDuration(duration),
-                style: TextStyle(color: AppColors.grey, fontSize: 12.sp),
-              ),
-              Spacer(),
-
-              Text(
-                TimeHelpers.formatFullTime(meeting.eventToDate),
-                style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
-              ),
-            ],
+  // --- COMPONENT: THE SPLIT ROW ---
+  Widget _buildSplitRow(String label, Widget content) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        // FIXED WIDTH LABEL SIDE
+        SizedBox(
+          width: 150.w,
+          child: Text(
+            label,
+            style: TextStyle(
+              color: AppColors.grey,
+              fontWeight: FontWeight.bold,
+              fontSize: 18.sp,
+            ),
           ),
-          Column(
-            mainAxisSize: MainAxisSize.max,
-            children: [
-              Container(
-                width: 12.w,
-                height: 12.w,
-                decoration: const BoxDecoration(
-                  color: AppColors.brightRedColor,
-                  shape: BoxShape.circle,
-                ),
-              ),
-              Container(
-                width: 2.w,
-                height: ScreenUtil().screenHeight - 325,
-                color: AppColors.brightRedColor,
-              ),
-
-              Container(width: 2, height: 100, color: AppColors.brightRedColor),
-              Container(
-                width: 12.w,
-                height: 12.w,
-                decoration: BoxDecoration(
-                  color: AppColors.brightRedColor,
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ],
+        ),
+        // SCROLLABLE DATA SIDE
+        Expanded(
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            physics: const BouncingScrollPhysics(),
+            child: content,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 
-  Widget _buildMeetingDetails(BuildContext context) {
+  Widget _buildHeaderSection() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           TimeHelpers.formatDate(meeting.eventFromDate),
-          style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
+          style: TextStyle(color: AppColors.grey, fontSize: 18.sp),
         ),
-
-        // SizedBox(height: 8.h),
-        Spacer(),
+        SizedBox(height: 8.h),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Expanded(
               child: Text(
-                '${meeting.meetingType} : ${meeting.eventSubject}',
+                '${meeting.meetingTypeName.toUpperCase()} : ${meeting.eventSubject}',
                 style: TextStyle(
                   color: AppColors.brightRedColor,
-                  fontSize: 20.sp,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
             ),
-            IconButton(
-              icon: Icon(
-                Icons.edit,
-                color: AppColors.brightRedColor,
-                size: 20.w,
-              ),
-              onPressed: () {},
-            ),
+            Icon(Icons.edit, color: AppColors.brightRedColor, size: 24.w),
           ],
         ),
-
-        // SizedBox(height: 16.h),
-        Spacer(),
-        Row(
-          children: [
-            Text(
-              'Event Status',
-              style: TextStyle(color: AppColors.grey, fontSize: 14.sp),
-            ),
-            SizedBox(width: 20.w),
-            Text(
-              meeting.statusDesc,
-              style: TextStyle(color: AppColors.white, fontSize: 14.sp),
-            ),
-          ],
-        ),
-
-        // SizedBox(height: 32.h),
-        Spacer(),
-        Row(
-          children: [
-            Text(
-              'Organizer',
-              style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
-            ),
-            SizedBox(width: 16.w),
-            _buildOrganizerCard(),
-          ],
-        ),
-
-        Spacer(),
-        // SizedBox(height: 32.h),
-        _buildAttendees(context),
-        // SizedBox(height: 32.h),
-        Spacer(),
-        _buildFollowers(context),
-        // SizedBox(height: 80.h),
-        Spacer(),
       ],
     );
   }
 
-  Widget _buildOrganizerCard() {
+  Widget _buildTimeline(double maxHeight) {
+    return SizedBox(
+      height: maxHeight - 40.h,
+      child: Row(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              _timeText(
+                TimeHelpers.formatTimeWithPeriod(
+                  meeting.eventFromDate,
+                ).toUpperCase(),
+              ),
+              _timeText(TimeHelpers.formatDuration(meeting.duration)),
+              _timeText(
+                TimeHelpers.formatTimeWithPeriod(
+                  meeting.eventToDate,
+                ).toUpperCase(),
+              ),
+            ],
+          ),
+          SizedBox(width: 20.w),
+          Column(
+            children: [
+              _dot(),
+              Expanded(
+                child: Container(width: 2.w, color: AppColors.brightRedColor),
+              ),
+              _dot(),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _timeText(String text) => Text(
+    text,
+    style: TextStyle(
+      color: AppColors.grey,
+      fontWeight: FontWeight.bold,
+      fontSize: 16.sp,
+    ),
+  );
+  Widget _dot() => Container(
+    width: 14.w,
+    height: 14.w,
+    decoration: const BoxDecoration(
+      color: AppColors.brightRedColor,
+      shape: BoxShape.circle,
+    ),
+  );
+
+  Widget _buildPersonCard({
+    required String name,
+    required String? imageUrl,
+    required Color borderColor,
+    String? subTitle,
+    String? statusIconPath,
+    Color? statusColor,
+    bool showRemove = true,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(0),
-      decoration: BoxDecoration(
-        // border: Border.all(color: AppColors.grey.withOpacity(0.3)),
-        // borderRadius: BorderRadius.circular(8),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+      width: 130.w,
+      padding: EdgeInsets.only(right: 10.w),
+      child: Stack(
         children: [
-          CircleAvatar(
-            radius: 24.r,
-            backgroundColor: AppColors.brightGreenColor,
-            child: CachedNetworkImage(
-              imageUrl: meeting.createdByUserName.toString(),
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) => Icon(Icons.person),
-            ),
-            // const Icon(Icons.person, color: AppColors.white),
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            meeting.createdByUserName,
-            style: TextStyle(color: AppColors.white, fontSize: 14.sp),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAttendees(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Attendees',
-            style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
-          ),
-          SizedBox(width: 16.w),
-          if (meeting.participants.isEmpty) _buildAddButton(context, 'ADD'),
-          ...meeting.participants.map(
-            (participant) => Padding(
-              padding: const EdgeInsets.only(bottom: 0.0),
-              child: Container(
-                padding: EdgeInsets.all(12.w),
-                // decoration: BoxDecoration(
-                //   border: Border.all(color: AppColors.grey.withOpacity(0.3)),
-                //   borderRadius: BorderRadius.circular(8),
-                // ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 24.r,
-                      backgroundColor: AppColors.grey,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(100.r),
-                        child: CachedNetworkImage(
-                          imageUrl: participant.personPhotoName
-                              .toString()
-                              .replaceFirst("http://", "https://"),
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.person),
+          Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Stack(
+                children: [
+                  Container(
+                    width: 90.w,
+                    height: 90.w,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: borderColor, width: 5.w),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(100),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            imageUrl?.replaceFirst("http://", "https://") ?? "",
+                        fit: BoxFit.cover,
+                        errorWidget: (context, url, error) => Container(
+                          color: AppColors.black,
+                          alignment: Alignment.center,
+                          child: Text(
+                            getInitials(name),
+                            style: TextStyle(
+                              color: AppColors.white,
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
                         ),
                       ),
-                      // const Icon(Icons.person, color: AppColors.white),
                     ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      participant.personName,
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 14.sp,
-                        // fontWeight: FontWeight.bold,
+                  ),
+                  if (statusIconPath != null)
+                    Positioned(
+                      right: 12.w,
+                      bottom: 0,
+                      child: Container(
+                        height: 26.w,
+                        width: 26.w,
+                        decoration: BoxDecoration(
+                          color: Colors.black, // Your circular background color
+                          shape: BoxShape.circle,
+                        ),
+                        child: SvgPicture.asset(
+                          statusIconPath,
+                          // colorFilter: ColorFilter.mode(
+                          //   statusColor ?? AppColors.grey, // Your icon color
+                          //   BlendMode.srcIn,
+                          // ),
+                        ),
                       ),
                     ),
-                    // Expanded(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         participant.personName,
-                    //         style: const TextStyle(
-                    //           color: AppColors.white,
-                    //           fontSize: 14,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         participant.personDesignation,
-                    //         style: const TextStyle(
-                    //           color: AppColors.grey,
-                    //           fontSize: 12,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
+                ],
+              ),
+              SizedBox(height: 5.h),
+              Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  color: AppColors.textDisableColor,
+                  fontSize: 12.h,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              if (subTitle != null)
+                Text(
+                  subTitle,
+                  style: TextStyle(
+                    color: AppColors.textDisableColor,
+                    fontSize: 10.sp,
+                    fontWeight: FontWeight.w300,
+                  ),
+                ),
+            ],
+          ),
+          if (showRemove)
+            Positioned(
+              right: 10.h,
+              top: 0,
+              child: Container(
+                height: 23,
+                width: 23,
+                decoration: BoxDecoration(
+                  // color: Colors.white, // Your circular background color
+                  shape: BoxShape.circle,
+                ),
+                child: InkWell(
+                  onTap: () {},
+                  child: SvgPicture.asset(
+                    ImagePath.removeCircle,
+                    // colorFilter: ColorFilter.mode(
+                    //   AppColors.red, // Your icon color
+                    //   BlendMode.srcIn,
                     // ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-          if (meeting.participants.isNotEmpty) _buildAddButton(context, 'ADD'),
         ],
       ),
     );
   }
 
-  Widget _buildFollowers(BuildContext context) {
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            'Followers',
-            style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
-          ),
-          SizedBox(width: 16.w),
-          if (meeting.followers.isEmpty) _buildAddButton(context, 'ADD'),
-          ...meeting.followers.map(
-            (follower) => Padding(
-              padding: const EdgeInsets.only(bottom: 0.0),
-              child: Container(
-                padding: EdgeInsets.all(12.w),
-                // decoration: BoxDecoration(border: Border.all(color: AppColors.grey.withOpacity(0.3)), borderRadius: BorderRadius.circular(8)),
-                child: Column(
-                  children: [
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(100.r),
-                      child: CircleAvatar(
-                        radius: 24.r,
-                        backgroundColor: AppColors.grey,
-                        child: CachedNetworkImage(
-                          imageUrl: follower.personPhotoName
-                              .toString()
-                              .replaceFirst("http://", "https://"),
-                          placeholder: (context, url) =>
-                              CircularProgressIndicator(),
-                          errorWidget: (context, url, error) =>
-                              Icon(Icons.person),
-                        ),
-                        // const Icon(Icons.person, color: AppColors.white),
-                      ),
-                    ),
-                    SizedBox(height: 12.h),
-                    Text(
-                      follower.personName,
-                      style: TextStyle(
-                        color: AppColors.white,
-                        fontSize: 14.sp,
-                        // fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    // Expanded(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Text(
-                    //         follower.personName,
-                    //         style: const TextStyle(
-                    //           color: AppColors.white,
-                    //           fontSize: 14,
-                    //           fontWeight: FontWeight.bold,
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         follower.personDesignation,
-                    //         style: const TextStyle(
-                    //           color: AppColors.grey,
-                    //           fontSize: 12,
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          if (meeting.followers.isNotEmpty) _buildAddButton(context, 'ADD'),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildAddButton(BuildContext context, String label) {
+  Widget _buildAddButton(String label) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Container(
-          width: 50.w,
-          height: 50.w,
-          margin: EdgeInsets.only(top: 0.h),
-          // decoration: BoxDecoration(
-          //   shape: BoxShape.circle
-          // ),
-          child: OutlinedButton(
-            onPressed: () {},
-            style: OutlinedButton.styleFrom(
-              foregroundColor: AppColors.brightRedColor,
-              side: BorderSide(color: AppColors.brightRedColor, width: 2.w),
-              padding: EdgeInsets.symmetric(vertical: 14.h),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50.r),
-              ),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [Icon(Icons.add, color: Colors.red, size: 24.w)],
-            ),
+          width: 90.w,
+          height: 90.w,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: AppColors.brightRedColor, width: 2.w),
           ),
+          child: Icon(Icons.add, color: AppColors.brightRedColor, size: 25.w),
         ),
-        SizedBox(height: 8.h),
-
+        SizedBox(height: 5.h),
         Text(
           label,
           style: TextStyle(
-            fontSize: 14.sp,
+            fontSize: 12.sp,
             fontWeight: FontWeight.bold,
             color: AppColors.brightRedColor,
           ),
@@ -444,27 +443,31 @@ class DetailScreen extends StatelessWidget {
   }
 
   Widget _buildBottomBar(BuildContext context) {
-    return Container(
-      color: AppColors.black,
-      padding: EdgeInsets.all(16.0.w),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.check_circle_outline, color: AppColors.grey),
-            label: const Text(
-              'Complete Event',
-              style: TextStyle(color: AppColors.grey),
-            ),
-          ),
-          TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.edit, color: AppColors.grey),
-            label: const Text('Edit', style: TextStyle(color: AppColors.grey)),
-          ),
-        ],
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        _bottomAction(Icons.check_circle_outline, 'Complete Event'),
+        SizedBox(width: 20.w),
+        _bottomAction(Icons.edit, 'Edit'),
+      ],
+    );
+  }
+
+  Widget _bottomAction(IconData icon, String label) {
+    return TextButton.icon(
+      onPressed: () {},
+      icon: Icon(icon, color: AppColors.grey, size: 20.sp),
+      label: Text(
+        label,
+        style: TextStyle(color: AppColors.grey, fontSize: 16.sp),
       ),
     );
+  }
+
+  String getInitials(String name) {
+    if (name.trim().isEmpty) return "??";
+    List<String> parts = name.trim().split(RegExp(r'\s+'));
+    if (parts.length > 1) return (parts.first[0] + parts.last[0]).toUpperCase();
+    return parts.first[0].toUpperCase();
   }
 }

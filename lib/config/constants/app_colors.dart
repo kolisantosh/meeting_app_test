@@ -25,19 +25,20 @@ class AppColors {
   // static const Color darkRed = Color(0xFF8B0000);
   static const Color white = Color(0xFFFFFFFF);
   static const Color grey = Color(0xFF9E9E9E);
-
-  // Bright colors
-  static const Color brightYellowColor = Color.fromRGBO(255, 255, 0, 1.0);
-  static const Color brightRedColor = Color.fromRGBO(255, 0, 0, 0.9);
-  static const Color brightGreenColor = Color.fromRGBO(0, 255, 0, 0.7);
-
-  // Solid colors with transparency
-  static const Color solidYellowColor = Color.fromRGBO(255, 255, 0, 0.4);
-  static const Color solidRedColor = Color.fromRGBO(255, 0, 0, 0.4);
-  static const Color solidGreenColor = Color.fromRGBO(0, 255, 0, 0.3);
+  static const Color outLineColor = Color(0xFFE9EBED);
 
   static const Color textColor = Color(0xFF404244);
   static const Color textDisableColor = Color(0xFFAEAEAE);
+
+  // Bright colors
+  static const Color brightYellowColor = Color.fromRGBO(255, 255, 0, 1.0);
+  static const Color brightRedColor = Color.fromRGBO(255, 0, 0, 0.90);
+  static const Color brightGreenColor = Color.fromRGBO(0, 255, 0, 0.70);
+
+  // Solid colors with transparency
+  static const Color solidYellowColor = Color.fromRGBO(255, 255, 0, 0.40);
+  static const Color solidRedColor = Color.fromRGBO(255, 0, 0, 0.6);
+  static const Color solidGreenColor = Color.fromRGBO(0, 255, 0, 0.29);
 
   static Color getThemeColor(WatchStatus status) {
     switch (status) {

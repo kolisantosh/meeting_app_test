@@ -6,7 +6,7 @@ class TimeHelpers {
   }
 
   static String formatTimeWithPeriod(DateTime dateTime) {
-    return DateFormat('h:mma').format(dateTime).toLowerCase();
+    return DateFormat('h:mm a').format(dateTime).toLowerCase();
   }
 
   static String formatFullTime(DateTime dateTime) {
@@ -25,9 +25,9 @@ class TimeHelpers {
     final minutes = duration.inMinutes.remainder(60);
 
     if (hours > 0) {
-      return '$hours hrs ${minutes > 0 ? "$minutes mins" : ""}';
+      return '$hours hrs ${minutes > 0 ? "$minutes min" : ""}';
     } else {
-      return '$minutes mins';
+      return '$minutes minutes';
     }
   }
 
